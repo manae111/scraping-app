@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/scraping
+    username: postgres
+    password: postgres
+  batch:
+    jdbc:
+      initialize-schema: always
+  application:
+    name: demo
+  mail:
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
+
