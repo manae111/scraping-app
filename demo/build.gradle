@@ -29,6 +29,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	// Mail導入
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	// WebClient導入
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.json:json:20210307'
 }
 
 tasks.named('test') {

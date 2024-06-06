@@ -27,6 +27,10 @@ public class ScrapingController {
                         @RequestParam("itemPrice") String itemPriceStr
                         ){
         //jsから値段等を取得してitemにセット
+        if(itemNameOriginal == null || url == null || itemPriceStr == null){
+            System.out.println("解析不可");
+            return "redirect:/toInsert";
+        }
         Item item = new Item();
         String itemName = itemNameOriginal.replace(" ", "");
         item.setItemName(itemName);

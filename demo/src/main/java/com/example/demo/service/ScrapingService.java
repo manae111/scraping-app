@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
-import org.checkerframework.checker.units.qual.s;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -12,34 +15,65 @@ import com.example.demo.repository.ScrapingRepository;
 @Service
 public class ScrapingService {
 
-    @Autowired
+	@Autowired
 	private MailSender sender;
 
-    @Autowired
-    private ScrapingRepository scrapingRepository;
+	@Autowired
+	private ScrapingRepository scrapingRepository;
 
-    /**
-	 * メールピットに定時メールを送付
+	/**
+	 * 登録時priceよりもバッチ処理後priceが安い商品一覧のメールを送信するメソッド
 	 * 
 	 * @param email
 	 */
 	public void sendMail() {
-		SimpleMailMessage msg = new SimpleMailMessage();
+		List<Item> itemList = scrapingRepository.findAll();
+		List<Item> updateItemList = new ArrayList<>();
+		for (Item item : itemList) {
+			if (item.getPriceOriginal() > item.getPriceLatest()) {
+				updateItemList.add(item);
+			}
+		}
 
-		msg.setFrom("on99.matsunaga.dai@gmail.com");
-		msg.setTo("testtestsc@gmail.com");
-		msg.setSubject("テスト！！！");// タイトルの設定
-		msg.setText("これは本文です"); // 本文の設定
+		if (updateItemList.size() != 0) {
+			SimpleMailMessage msg = new SimpleMailMessage();
 
-		this.sender.send(msg);
+			msg.setFrom("on99.matsunaga.dai@gmail.com");
+			msg.setTo("testtestsc@gmail.com");
+			msg.setSubject("テスト！！！");// タイトルの設定
+			String updateItemListText = updateItemList.stream()
+					.map(item -> item.getUrl() + " : " + item.getItemName() + " : " + item.getPriceOriginal() + " : " + item.getPriceLatest())
+					.collect(Collectors.joining(", "));
+			msg.setText(updateItemListText);
+
+			this.sender.send(msg);
+		} else {
+			System.out.println("更新された商品はありません");
+
+		}
+
 	}
 
-    public void insert(Item item) {
-        scrapingRepository.insert(item);
-    }
+	public void insert(Item item) {
+		scrapingRepository.insert(item);
+	}
 
-    public Item update(Item item) {
-        return scrapingRepository.update(item);
-    }
+	public void update(String url, Integer price) {
+		scrapingRepository.update(url, price);
+	}
 
+	public List<String> findAllUrl() {
+		List<String> urlList = scrapingRepository.findAllUrl();
+		return urlList;
+	}
+
+	public Integer findPriceOriginal(String url) {
+		Integer priceOriginal = scrapingRepository.findPriceOriginal(url);
+		return priceOriginal;
+	}
+
+	public List<Item> findAll() {
+		List<Item> itemList = scrapingRepository.findAll();
+		return itemList;
+	}
 }

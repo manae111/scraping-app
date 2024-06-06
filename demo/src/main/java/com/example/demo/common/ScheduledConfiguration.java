@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import com.example.demo.service.ScrapingService;
+
 /**
  * バッチ処理を定時に呼び出すクラス
  * Sakai
@@ -27,20 +29,24 @@ public class ScheduledConfiguration {
     @Autowired
     private Job myjob;
 
-    // @Scheduled(cron = "0 0 12 * * ?")
-    // public void scheduledSendmail() {
-    //     JobParameters jobParameters = new JobParametersBuilder()
-    //         .addLong("time",System.currentTimeMillis())
-    //         .toJobParameters();
-    //     try {
-    //         jobLauncher.run(myjob, jobParameters);
-    //     } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
-    //     // ここで例外を処理します
-    //     e.printStackTrace();
-    //     }
+    @Autowired
+    private ScrapingService scrapingService;
 
-    //     // DB上に登録時priceよりもバッチ処理後priceが安い商品一覧の
-    //     // メールを送信するメソッドを呼び出す
+    @Scheduled(cron = "0 11 17 * * ?")
+    public void scheduledSendmail() {
+        JobParameters jobParameters = new JobParametersBuilder()
+            .addLong("time",System.currentTimeMillis())
+            .toJobParameters();
+        try {
+            jobLauncher.run(myjob, jobParameters);
+        } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
+        // ここで例外を処理します
+        e.printStackTrace();
+        }
 
-    // }
+        // DB上に登録時priceよりもバッチ処理後priceが安い商品一覧の
+        // メールを送信するメソッドを呼び出す
+        scrapingService.sendMail();
+
+    }
 }
