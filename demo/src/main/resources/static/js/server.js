@@ -16,7 +16,7 @@ app.post('/scrape', (req, res) => {
       const html = response.data;
       const $ = cheerio.load(html);
       const name = $('#productTitle').text(); // Assume the name is in an element with class 'name'
-      const price = $('#corePriceDisplay_desktop_feature_div .a-price-whole').text(); // Assume the price is in an element with ID 'productPrice'
+      const price = $('#corePriceDisplay_desktop_feature_div .a-price-whole:first').text(); // Assume the price is in an element with ID 'productPrice'
       res.send({name: name, price: price, url: url}); // Send the scraped name and price as the response
     })
     .catch(error => {
