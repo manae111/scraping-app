@@ -28,7 +28,7 @@ public class ScrapingController {
                         ){
         //jsから値段等を取得してitemにセット
         if(itemNameOriginal == null || url == null || itemPriceStr == null){
-            System.out.println("解析不可");
+            System.out.println("解析不可");//あとでロガーにする
             return "redirect:/toInsert";
         }
         Item item = new Item();

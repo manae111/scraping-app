@@ -32,15 +32,17 @@ public class ScheduledConfiguration {
     @Autowired
     private ScrapingService scrapingService;
 
-    @Scheduled(cron = "0 11 17 * * ?")
+    //cron = "秒 分 時間 日 月 曜日"
+    @Scheduled(cron = "0 59 9 * * ?")
     public void scheduledSendmail() {
         JobParameters jobParameters = new JobParametersBuilder()
-            .addLong("time",System.currentTimeMillis())
+            .addLong("time",System.currentTimeMillis())//実行時間を記録
             .toJobParameters();
         try {
             jobLauncher.run(myjob, jobParameters);
         } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
-        // ここで例外を処理します
+        //左からJobがすでに実行中、Jobが再実行された、Jobがすでに完了している、Jobのパラメータが不正
+        // ここで例外を処理します。あとでロガー追加する
         e.printStackTrace();
         }
 
