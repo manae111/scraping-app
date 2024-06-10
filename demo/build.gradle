@@ -24,6 +24,14 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// SpringBatch導入
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// Mail導入
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	// WebClient導入
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.json:json:20210307'
 }
 
 tasks.named('test') {

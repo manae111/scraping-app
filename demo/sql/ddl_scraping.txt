@@ -1,0 +1,15 @@
+Itemテーブル
+
+select * from items;
+
+cd demo/src/main/resources/static/js
+
+drop table if exists items cascade;
+create table items (
+ id serial primary key
+ , url text not null
+ , item_name text
+ , price_original integer not null
+ , price_latest integer
+ , user_id integer
+) ;
