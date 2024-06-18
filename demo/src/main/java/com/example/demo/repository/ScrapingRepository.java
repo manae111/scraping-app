@@ -56,8 +56,7 @@ public class ScrapingRepository {
     public void update(String url ,Integer price) {
         String sql = "UPDATE items SET price_latest = :priceLatest WHERE URL = :url";
         SqlParameterSource param = new MapSqlParameterSource().addValue("priceLatest", price).addValue("url", url);
-        int updatedRows = template.update(sql, param);
-        System.out.println(updatedRows + "件更新しました");
+        template.update(sql, param);
     }
 
     /**

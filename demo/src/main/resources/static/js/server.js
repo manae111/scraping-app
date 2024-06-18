@@ -1,13 +1,13 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const axios = require('axios');
-const cheerio = require('cheerio');
-const cors = require('cors');
+// インポート
+const express = require('express');//Webサーバー構築のためのフレームワーク
+const axios = require('axios');//ライブラリ（httpクライアントを送信する）
+const cheerio = require('cheerio');//ライブラリ（htmlの解析）
+const cors = require('cors');//ミドルウェア
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true }));//URLエンコードされたデータを解析する
+app.use(express.json());//JSONデータを解析する
 
 app.post('/scrape', (req, res) => {
   const url = req.body.url;
@@ -16,56 +16,34 @@ app.post('/scrape', (req, res) => {
     .then(response => {
       const html = response.data;
       const $ = cheerio.load(html);
-      const name = $('#productTitle').text(); // Assume the name is in an element with class 'name'
-      const price = $('#corePriceDisplay_desktop_feature_div .a-price-whole:first').text(); // Assume the price is in an element with ID 'productPrice'
-      res.send({name: name, price: price, url: url}); // Send the scraped name and price as the response
+      const name = $('#productTitle').text(); // htmlからidがproductTitleのテキストを取得
+      const price = $('#corePriceDisplay_desktop_feature_div .a-price-whole:first').text();
+      res.send({name: name, price: price, url: url});
     })
     .catch(error => {
-      console.error('Error:', error);
+      console.error('商品登録時にサーバーでエラーが発生しました:', error);
       res.status(500).send(error);
     });
 });
 
 app.post('/scrape-batch', (req, res) => {
-  const url = req.body.url; // Get the URL from the request body
+  const url = req.body.url;
 
   axios.get(url)
     .then(response => {
       const html = response.data;
       const $ = cheerio.load(html);
-      const price = $('#corePriceDisplay_desktop_feature_div .a-price-whole:first').text(); // Assume the price is in an element with ID 'productPrice'
-      res.send({price: price}); // Send the scraped name and price as the response
+      const price = $('#corePriceDisplay_desktop_feature_div .a-price-whole:first').text();
+      res.send({price: price});
     })
     .catch(error => {
-      console.error('Error:', error);
+      console.error('バッチ処理中にサーバーでエラーが発生しました', error);
       res.status(500).send(error);
     });
 });
 
-app.get('', (req, res) => {
-  res.send('helloJava');
+app.get('', (res) => {
+  res.send('サーバーは正常に動作しています');
 });
 
-app.listen(3000, () => console.log('Server is running on port 3000'));
-
-var msg = 'Hello World';
-console.log(msg);
-
-// // モジュール準備
-// const http = require("http");
-
-// // サーバー作成
-// const server = http.createServer((_, res) => {
-//   // HTMLファイルを返却する準備
-//   res.writeHead(200, {
-//     "Content-Type": "text/html; charset=utf-8",
-//   });
-//   // HTMLファイルの内容
-//   res.end("<h1>サーバーはctrl + cで停止できる</h1>");
-// });
-
-// // サーバー起動
-// const port = 3000;
-// server.listen(port, function () {
-//   console.log("Node.js Server Started:" + port);
-// });
+app.listen(3000, () => console.log('サーバーが作成されました:port 3000'));

@@ -9,7 +9,7 @@
     <div style="text-align: center; margin-top: 50px;">
         <h3>URLを入力してください</h3>
         <form id="scrapeForm" action="http://localhost:3000/scrape" method="post">
-            <input type="text" name="url" required>
+            <input type="text" name="inputUrl" required>
             <!-- スクレイピング開始 -->
             <input type="submit" value="Scrape">
         </form>
@@ -17,11 +17,12 @@
             <!-- jsより受け取ったデータ -->
             <input type="hidden" id="scrapedItemName" name="itemName">
             <input type="hidden" id="scrapedItemPrice" name="itemPrice">
-            <input type="hidden" id="url" name="url">
+            <input type="hidden" id="scrapedUrl" name="url">
             <!-- nameがjava用、idがjs用 -->
             <!-- コントローラクラスに取得したデータを送信 -->
             <input type="submit" value="Submit" style="display: none;">
         </form>
+        <h3 th:text="${message}">解析失敗</h3>
     </div>
     <script src="/js/scraping.js"></script>
 </body>

@@ -3,6 +3,8 @@ package com.example.demo.common;
 import java.util.List;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -17,6 +19,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.example.demo.controller.ScrapingController;
 import com.example.demo.service.ScrapingService;
 
 import reactor.core.publisher.Mono;
@@ -29,6 +32,7 @@ import reactor.core.publisher.Mono;
 @Configuration
 public class BatchConfiguration {
 
+    private static final Logger logger = LoggerFactory.getLogger(ScrapingController.class);
     private final WebClient webClient;
     private final ScrapingService scrapingService;
 
@@ -54,6 +58,7 @@ public class BatchConfiguration {
     Tasklet myTasklet() {
         return (contribution, chunkContext) -> {
             List<String> urlList = scrapingService.findAllUrl();
+            int updateItemCount = 0;
             for (String url : urlList) {
                 JSONObject json = new JSONObject();
                 json.put("url", url);
@@ -67,17 +72,22 @@ public class BatchConfiguration {
 
                 String result = response.block();
 
-                // ここでres.send({price: price})を受け取りたい
                 // レスポンスをJSONオブジェクトとして解析
                 JSONObject jsonResponse = new JSONObject(result);
-                // resultの中身を確認
 
                 // "price"フィールドを取得
                 String priceStr = jsonResponse.getString("price");
-                priceStr = priceStr.replace(",", "");
-                int price = Integer.parseInt(priceStr);
-                scrapingService.update(url, price);
+                if (priceStr != null && !priceStr.isEmpty()) {
+                    priceStr = priceStr.replace(",", "");
+                    int price = Integer.parseInt(priceStr);
+                    scrapingService.update(url, price);
+                    updateItemCount++;
+                } else {
+                    logger.error("最新価格の取得に失敗しました　URL:" + url);
+                }
+                
             }
+            logger.info("更新件数:" + updateItemCount);
             return RepeatStatus.FINISHED;
         };
     }

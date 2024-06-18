@@ -1,5 +1,7 @@
 package com.example.demo.common;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -13,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import com.example.demo.controller.ScrapingController;
 import com.example.demo.service.ScrapingService;
 
 /**
@@ -22,6 +25,9 @@ import com.example.demo.service.ScrapingService;
 @Configuration
 @EnableScheduling
 public class ScheduledConfiguration {
+
+    private static final Logger logger = LoggerFactory.getLogger(ScrapingController.class);
+
 
     @Autowired
     private JobLauncher jobLauncher;
@@ -33,7 +39,7 @@ public class ScheduledConfiguration {
     private ScrapingService scrapingService;
 
     //cron = "秒 分 時間 日 月 曜日"
-    @Scheduled(cron = "0 59 9 * * ?")
+    @Scheduled(cron = "0 46 10 * * ?")
     public void scheduledSendmail() {
         JobParameters jobParameters = new JobParametersBuilder()
             .addLong("time",System.currentTimeMillis())//実行時間を記録
@@ -42,12 +48,11 @@ public class ScheduledConfiguration {
             jobLauncher.run(myjob, jobParameters);
         } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
         //左からJobがすでに実行中、Jobが再実行された、Jobがすでに完了している、Jobのパラメータが不正
-        // ここで例外を処理します。あとでロガー追加する
+        logger.error("バッチ処理が失敗しました");
         e.printStackTrace();
         }
 
-        // DB上に登録時priceよりもバッチ処理後priceが安い商品一覧の
-        // メールを送信するメソッドを呼び出す
+        // DB上に登録時priceよりもバッチ処理後priceが安い商品一覧をメールを送信するメソッドを呼び出す
         scrapingService.sendMail();
 
     }

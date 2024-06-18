@@ -1,9 +1,9 @@
 'use strict';
 
 document.getElementById('scrapeForm').addEventListener('submit', function(event) {
-    event.preventDefault();
+    event.preventDefault();//ページ遷移キャンセル
   
-    var url = this.querySelector('input[name="url"]').value;
+    var url = this.querySelector('input[name="inputUrl"]').value;
   
     fetch(this.action, {
       method: 'POST',
@@ -16,8 +16,8 @@ document.getElementById('scrapeForm').addEventListener('submit', function(event)
       .then(data => {
         document.getElementById('scrapedItemName').value = data.name;
         document.getElementById('scrapedItemPrice').value = data.price;
-        document.getElementById('url').value = data.url;
+        document.getElementById('scrapedUrl').value = data.url;
         document.getElementById('submitForm').submit();
       })
-      .catch(error => console.error('Error:', error));
+      .catch(error => console.error('商品登録時にJavaScript上でエラーが発生しました:', error));
   });

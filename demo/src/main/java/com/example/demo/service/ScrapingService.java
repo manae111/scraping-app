@@ -4,16 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.controller.ScrapingController;
 import com.example.demo.domain.Item;
 import com.example.demo.repository.ScrapingRepository;
 
 @Service
 public class ScrapingService {
+
+	private static final Logger logger = LoggerFactory.getLogger(ScrapingController.class);
 
 	@Autowired
 	private MailSender sender;
@@ -36,17 +41,38 @@ public class ScrapingService {
 		}
 
 		if (updateItemList.size() != 0) {
-			SimpleMailMessage msg = new SimpleMailMessage();
 
-			msg.setFrom("on99.matsunaga.dai@gmail.com");
-			msg.setTo("testtestsc@gmail.com");
-			msg.setSubject("テスト！！！");// タイトルの設定
-			String updateItemListText = updateItemList.stream()
-					.map(item -> item.getUrl() + " : " + item.getItemName() + " : " + item.getPriceOriginal() + " : " + item.getPriceLatest())
-					.collect(Collectors.joining(", "));
-			msg.setText(updateItemListText);
+			try {
+				SimpleMailMessage msg = new SimpleMailMessage();
+				msg.setFrom("on99.matsunaga.dai@gmail.com");
+				msg.setTo("testtestsc@gmail.com");
+				msg.setSubject("価格変更がある商品のご案内");// タイトルの設定
+				String template = "=======================================\n" +
+                  "商品名:\n" +
+                  "{itemName}\n\n" +
+                  "URL:\n" +
+                  "{url}\n\n" +
+                  "登録時の価格:\n" +
+                  "{priceOriginal}円\n\n" +
+                  "現在の価格:\n" +
+                  "{priceLatest}円\n\n" +
+                  "=======================================";
 
-			this.sender.send(msg);
+				String message = updateItemList.stream()
+				  .map(updateItem -> template.replace("{itemName}", updateItem.getItemName())
+											 .replace("{url}", updateItem.getUrl())
+											 .replace("{priceOriginal}", String.valueOf(updateItem.getPriceOriginal()))
+											 .replace("{priceLatest}", String.valueOf(updateItem.getPriceLatest())))
+				  .collect(Collectors.joining("\n"));
+			  	msg.setText(message);
+				sender.send(msg);
+				logger.info(updateItemList.size()+ "件の価格変更がありました");
+
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		} else {
 			System.out.println("更新された商品はありません");
 
