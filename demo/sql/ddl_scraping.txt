@@ -1,9 +1,9 @@
-Itemテーブル
-
-select * from items;
+select * from items order by id asc;
+select * from users order by id asc;
 
 cd demo/src/main/resources/static/js
 
+-- 商品
 drop table if exists items cascade;
 create table items (
  id serial primary key
@@ -12,4 +12,12 @@ create table items (
  , price_original integer not null
  , price_latest integer
  , user_id integer
+) ;
+
+-- ユーザー
+drop table if exists users cascade;
+create table users (
+ id serial primary key
+ , username text not null unique
+ , password text not null
 ) ;

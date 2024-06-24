@@ -42,7 +42,7 @@ app.post('/scrape-batch', (req, res) => {
     });
 });
 
-app.get('', (res) => {
+app.get('/', (req,res) => {
   res.send('サーバーは正常に動作しています');
 });
 

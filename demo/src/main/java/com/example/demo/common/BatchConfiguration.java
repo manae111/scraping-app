@@ -62,7 +62,6 @@ public class BatchConfiguration {
             for (String url : urlList) {
                 JSONObject json = new JSONObject();
                 json.put("url", url);
-
                 Mono<String> response = webClient.post()
                         .uri("/scrape-batch")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -71,6 +70,7 @@ public class BatchConfiguration {
                         .bodyToMono(String.class);
 
                 String result = response.block();
+                logger.info("Received response from /scrape-batch: {}", result);
 
                 // レスポンスをJSONオブジェクトとして解析
                 JSONObject jsonResponse = new JSONObject(result);

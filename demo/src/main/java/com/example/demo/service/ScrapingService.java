@@ -9,10 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.controller.ScrapingController;
 import com.example.demo.domain.Item;
+import com.example.demo.domain.User;
 import com.example.demo.repository.ScrapingRepository;
 
 @Service
@@ -22,6 +24,9 @@ public class ScrapingService {
 
 	@Autowired
 	private MailSender sender;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	private ScrapingRepository scrapingRepository;
@@ -35,7 +40,7 @@ public class ScrapingService {
 		List<Item> itemList = scrapingRepository.findAll();
 		List<Item> updateItemList = new ArrayList<>();
 		for (Item item : itemList) {
-			if (item.getPriceOriginal() > item.getPriceLatest()) {
+			if (item.getPriceLatest() != null && item.getPriceOriginal() > item.getPriceLatest()){
 				updateItemList.add(item);
 			}
 		}
@@ -101,5 +106,15 @@ public class ScrapingService {
 	public List<Item> findAll() {
 		List<Item> itemList = scrapingRepository.findAll();
 		return itemList;
+	}
+
+	public List<Item> findItemByUserId(Integer userId) {
+		List<Item> itemList = scrapingRepository.findItemByUserId(userId);
+		return itemList;
+	}
+
+	public void insertUser(User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		scrapingRepository.insertUser(user);
 	}
 }
