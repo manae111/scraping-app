@@ -4,14 +4,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/scraping
     username: postgres
     password: postgres
-  batch:
-    jdbc:
-      initialize-schema: always
-  application:
-  # 消しても問題ないか確認
-    name: demo
   mail:
     host: ${MAIL_HOST:localhost}
     port: ${MAIL_PORT:1025}
-    # ただのlocalhostと1025に書き換える
 

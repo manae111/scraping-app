@@ -1,9 +1,14 @@
 'use strict';
 
 document.getElementById('scrapeForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-  
-    var url = this.querySelector('input[name="url"]').value;
+    event.preventDefault();//ページ遷移キャンセル
+
+    //ここでScrapeボタンを無効化
+    document.getElementById('Scrape').disabled = true;
+    //ここでScrapeボタンのvalueを「解析中...」に変更
+    document.getElementById('Scrape').value = '解析中...';
+
+    var url = this.querySelector('input[name="inputUrl"]').value;
   
     fetch(this.action, {
       method: 'POST',
@@ -16,8 +21,8 @@ document.getElementById('scrapeForm').addEventListener('submit', function(event)
       .then(data => {
         document.getElementById('scrapedItemName').value = data.name;
         document.getElementById('scrapedItemPrice').value = data.price;
-        document.getElementById('url').value = data.url;
+        document.getElementById('scrapedUrl').value = data.url;
         document.getElementById('submitForm').submit();
       })
-      .catch(error => console.error('Error:', error));
+      .catch(error => console.error('商品登録時にJavaScript上でエラーが発生しました:', error));
   });

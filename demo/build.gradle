@@ -32,6 +32,8 @@ dependencies {
 	// WebClient導入
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.json:json:20210307'
+	// SpringSecurity導入
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 tasks.named('test') {
