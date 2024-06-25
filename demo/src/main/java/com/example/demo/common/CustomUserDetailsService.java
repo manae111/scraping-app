@@ -9,16 +9,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.repository.ScrapingRepository;
+import com.example.demo.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService{
 
     @Autowired
-    private ScrapingRepository scrapingRepository;
+    private UserRepository userRepository;
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.example.demo.domain.User user = scrapingRepository.findUserByUsername(username);
+        com.example.demo.domain.User user = userRepository.findUserByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found for name: " + username);
         }

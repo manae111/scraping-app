@@ -3,6 +3,8 @@ select * from users order by id asc;
 
 cd demo/src/main/resources/static/js
 
+Spring Security Core 6.3.0
+
 -- 商品
 drop table if exists items cascade;
 create table items (

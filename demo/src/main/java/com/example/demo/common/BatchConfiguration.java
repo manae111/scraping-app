@@ -19,8 +19,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.example.demo.controller.ScrapingController;
-import com.example.demo.service.ScrapingService;
+import com.example.demo.service.ItemService;
 
 import reactor.core.publisher.Mono;
 
@@ -32,13 +31,13 @@ import reactor.core.publisher.Mono;
 @Configuration
 public class BatchConfiguration {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScrapingController.class);
+    private static final Logger logger = LoggerFactory.getLogger(BatchConfiguration.class);
     private final WebClient webClient;
-    private final ScrapingService scrapingService;
+    private final ItemService itemService;
 
-    public BatchConfiguration(WebClient.Builder webClientBuilder, ScrapingService scrapingService) {
+    public BatchConfiguration(WebClient.Builder webClientBuilder, ItemService itemService) {
         this.webClient = webClientBuilder.baseUrl("http://localhost:3000").build();
-        this.scrapingService = scrapingService;
+        this.itemService = itemService;
     }
 
     @Bean
@@ -57,7 +56,7 @@ public class BatchConfiguration {
     @Bean
     Tasklet myTasklet() {
         return (contribution, chunkContext) -> {
-            List<String> urlList = scrapingService.findAllUrl();
+            List<String> urlList = itemService.findAllUrl();
             int updateItemCount = 0;
             for (String url : urlList) {
                 JSONObject json = new JSONObject();
@@ -70,7 +69,7 @@ public class BatchConfiguration {
                         .bodyToMono(String.class);
 
                 String result = response.block();
-                logger.info("Result:", result);
+                logger.info("Result: {}", result);
 
                 // レスポンスをJSONオブジェクトとして解析
                 JSONObject jsonResponse = new JSONObject(result);
@@ -80,14 +79,14 @@ public class BatchConfiguration {
                 if (priceStr != null && !priceStr.isEmpty()) {
                     priceStr = priceStr.replace(",", "");
                     int price = Integer.parseInt(priceStr);
-                    scrapingService.update(url, price);
+                    itemService.update(url, price);
                     updateItemCount++;
                 } else {
                     logger.error("最新価格の取得に失敗しました　URL:" + url);
                 }
                 
             }
-            logger.info("更新件数:" + updateItemCount);
+            logger.info("取得件数:" + updateItemCount);
             return RepeatStatus.FINISHED;
         };
     }

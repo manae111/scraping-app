@@ -15,8 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import com.example.demo.controller.ScrapingController;
-import com.example.demo.service.ScrapingService;
+import com.example.demo.service.ItemService;
 
 /**
  * バッチ処理を定時に呼び出すクラス
@@ -26,7 +25,7 @@ import com.example.demo.service.ScrapingService;
 @EnableScheduling
 public class ScheduledConfiguration {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScrapingController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ScheduledConfiguration.class);
 
 
     @Autowired
@@ -36,10 +35,10 @@ public class ScheduledConfiguration {
     private Job myjob;
 
     @Autowired
-    private ScrapingService scrapingService;
+    private ItemService itemService;
 
     //cron = "秒 分 時間 日 月 曜日"
-    @Scheduled(cron = "0 53 14 * * ?")
+    @Scheduled(cron = "0 23 17 * * ?")
     public void scheduledSendmail() {
         JobParameters jobParameters = new JobParametersBuilder()
             .addLong("time",System.currentTimeMillis())//実行時間を記録
@@ -53,7 +52,7 @@ public class ScheduledConfiguration {
         }
 
         // DB上に登録時priceよりもバッチ処理後priceが安い商品一覧をメールを送信するメソッドを呼び出す
-        scrapingService.sendMail();
+        itemService.sendMail();
 
     }
 }

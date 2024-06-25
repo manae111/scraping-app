@@ -55,9 +55,5 @@ public class Item {
 
     public void setPriceLatest(Integer priceLatest) {
         this.priceLatest = priceLatest;
-    }
-
-    
-
-    
+    }  
 }

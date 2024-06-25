@@ -37,7 +37,9 @@
                 <td th:text="${item.priceOriginal}">登録価格</td>
                 <td th:if="${item.priceLatest == null}" th:text="'データなし'">最新価格</td>
                 <td th:unless="${item.priceLatest == null}" th:text="${item.priceLatest}">最新価格</td>
-                <td th:text="${item.url}">URL</td>
+                <td>
+                    <a th:href="${item.url}" th:text="${item.url}" target="_blank">URL</a>
+                </td>
                 <td>
                     <form th:action="@{/delete}" method="post">
                         <input type="hidden" name="id" th:value="${item.id}">
