@@ -18,6 +18,7 @@ import com.example.demo.common.CustomUserDetails;
 import com.example.demo.domain.Item;
 import com.example.demo.domain.User;
 import com.example.demo.form.UserForm;
+import com.example.demo.service.ItemService;
 import com.example.demo.service.ScrapingService;
 
 @Controller
@@ -28,6 +29,9 @@ public class ScrapingController {
 
     @Autowired
     private ScrapingService scrapingService;
+
+    @Autowired
+    private ItemService itemService;
 
     //ログイン
     @GetMapping("/toLogin")
@@ -86,5 +90,16 @@ public class ScrapingController {
         }
         return "redirect:/toInsert";
     }
+
+    /**
+     * 商品削除
+     */
+    @PostMapping("/delete")
+    public String delete(@RequestParam("id") Integer id) {
+        itemService.delete(id);
+        return "redirect:/toInsert";
+    }
+
+
 
 }

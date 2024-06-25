@@ -47,6 +47,11 @@ public class ScrapingRepository {
         return url;
     };
 
+    private static final RowMapper<String> USERNAME_ROW_MAPPER = (rs, i) -> {
+        String username = rs.getString("username");
+        return username;
+    };
+
     /**
      * 商品情報を挿入するメソッド
      * 
@@ -148,5 +153,32 @@ public class ScrapingRepository {
         SqlParameterSource param = new MapSqlParameterSource().addValue("username", username);
         User user = template.queryForObject(sql, param, USER_ROW_MAPPER);
         return user;
+    }
+
+    /**
+     * 全てのusernameを取得するメソッド
+     */
+    public List<String> findAllUsername() {
+        String sql = """
+                SELECT username FROM users;
+                """;
+        List<String> usernameList = template.query(sql, USERNAME_ROW_MAPPER);
+        return usernameList;
+    }
+
+    /**
+     * usernameからOriginalPrice>LatestPriceのitemを取得するメソッド
+     */
+    public List<Item> findUpdateItem(String username) {
+        String sql = """
+                SELECT * 
+                FROM items i
+                LEFT OUTER JOIN users u 
+                ON i.user_id = u.id 
+                WHERE i.price_original > i.price_latest AND u.username = :username;
+                """;
+                SqlParameterSource param = new MapSqlParameterSource().addValue("username", username);
+        List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER);
+        return itemList;
     }
 }

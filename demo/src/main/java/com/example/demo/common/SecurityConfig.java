@@ -23,14 +23,15 @@ public class SecurityConfig {
             .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                 .requestMatchers("/toLogin","/login", "/toRegister", "/register", "/css/**", "/js/**", "/img/**")
                 .permitAll()
-                .requestMatchers("/toInsert", "/insert")
-                .hasAuthority("USER"))
+                .anyRequest().authenticated())
             .formLogin(login -> login
                 .loginPage("/toLogin")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/toInsert")
-                .failureUrl("/toLogin")
-                .permitAll());
+                .failureUrl("/toLogin"))
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/toLogin"));
             return http.build();
     }
 }

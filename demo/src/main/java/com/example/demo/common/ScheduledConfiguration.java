@@ -39,7 +39,7 @@ public class ScheduledConfiguration {
     private ScrapingService scrapingService;
 
     //cron = "秒 分 時間 日 月 曜日"
-    @Scheduled(cron = "0 31 16 * * ?")
+    @Scheduled(cron = "0 53 14 * * ?")
     public void scheduledSendmail() {
         JobParameters jobParameters = new JobParametersBuilder()
             .addLong("time",System.currentTimeMillis())//実行時間を記録

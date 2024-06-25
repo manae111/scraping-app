@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Webスクレイパー</title>
+    <link rel="stylesheet" th:href="@{/css/scraping.css}" href="../static/css/scraping.css">
 </head>
 <body>
-    <div style="text-align: center; margin-top: 50px;">
+    <div>
         <h3>Webスクレイパー&nbsp;ログイン</h3>
         <form th:action="@{/login}" method="post">
             メールアドレス:<input type="email" name="username"><br>

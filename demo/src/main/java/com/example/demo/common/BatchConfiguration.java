@@ -70,7 +70,7 @@ public class BatchConfiguration {
                         .bodyToMono(String.class);
 
                 String result = response.block();
-                logger.info("Received response from /scrape-batch: {}", result);
+                logger.info("Result:", result);
 
                 // レスポンスをJSONオブジェクトとして解析
                 JSONObject jsonResponse = new JSONObject(result);
