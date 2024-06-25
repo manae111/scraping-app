@@ -42,6 +42,7 @@ Amazon商品の値段のスクレイピングとバッチ処理
 Amazonの商品ページのURLを入力すると値段等がスクレイピングされDBに登録されます。
 毎日11:00のバッチ処理時に登録してある商品の最新の値段をDBに保存、登録時の値段と比較し、
 登録時よりも安くなっていた場合、メールピットにその商品の情報を送信します。
+ユーザーはサービス利用時にメールアドレスとパスワードを登録する必要があり、登録商品はユーザーごとに管理されます。
 
 <p align="right">(<a href="#top">トップへ</a>)</p>
 
@@ -53,6 +54,7 @@ Amazonの商品ページのURLを入力すると値段等がスクレイピン�
 | --------------------- | ---------- |
 | Node.js               | 20.14.0    |
 | SpringBoot            | 3.3.0      |
+| SpringSecurity        | 6.3.0      |
 | java                  | 17.0.10    |
 | PostgreSQL            | 11.22      |
 | Docker                | 25.0.3     |
@@ -65,7 +67,7 @@ Amazonの商品ページのURLを入力すると値段等がスクレイピン�
 
 <!-- Treeコマンドを使ってディレクトリ構成を記載 -->
 
-❯ tree -a -I "node_modules|.next|.git|.pytest_cache|static" -L 2
+❯ tree -a -I "node_modules|.next|.git|.pytest_cache|static" -L 3
 <pre>
 .
 ├── .vscode
@@ -84,8 +86,6 @@ Amazonの商品ページのURLを入力すると値段等がスクレイピン�
 │   │   ├── main
 │   │   └── test
 │   ├── build.gradle
-│   ├── docs
-│   │   └── requirements
 │   ├── gradle
 │   │   └── wrapper
 │   ├── gradlew
@@ -106,9 +106,10 @@ Amazonの商品ページのURLを入力すると値段等がスクレイピン�
 
 <!-- コンテナの作成方法、パッケージのインストール方法など、開発環境構築に必要な情報を記載 -->
 
-### コンテナの作成と起動
+### 作成と起動
 
-.env ファイルを以下の環境変数例を元に作成
+データベース
+
 
 .env
 MAIL_HOST=localhost
