@@ -39,9 +39,9 @@ Amazon商品の値段のスクレイピングとバッチ処理
 ## プロジェクトについて
 
 <!-- プロジェクトの概要を記載 -->
-Amazonの商品ページのURLを入力すると値段等がスクレイピングされDBに登録されます。
-毎日11:00のバッチ処理時に登録してある商品の最新の値段をDBに保存、登録時の値段と比較し、
-登録時よりも安くなっていた場合、メールピットにその商品の情報を送信します。
+Amazonの商品ページのURLを入力すると値段等がスクレイピングされDBに登録されます。  
+毎日11:00のバッチ処理時に登録してある商品の最新の値段をDBに保存、登録時の値段と比較し、  
+登録時よりも安くなっていた場合、メールピットにその商品の情報を送信します。  
 ユーザーはサービス利用時にメールアドレスとパスワードを登録する必要があり、登録商品はユーザーごとに管理されます。
 
 <p align="right">(<a href="#top">トップへ</a>)</p>
@@ -108,27 +108,34 @@ Amazonの商品ページのURLを入力すると値段等がスクレイピン�
 
 ### 作成と起動
 
-データベース
-
-
-.env
-MAIL_HOST=localhost
-MAIL_PORT=1025
-
-node server.jsでサーバーを起動する
-DemoApplicationを起動する
+DBとテーブルを作成する  
+node server.jsでサーバーを起動する  
+DemoApplicationを起動する  
+dockerでmailpitを起動する
 
 ### 動作確認
 
-http://localhost:3030/、
-http://localhost:8080/toInsert にアクセスできるか確認。
-アクセスできたら成功
+http://localhost:3000 （サーバー）  
+http://localhost:8025 （mailpit）  
+http://localhost:8080/toLogin にアクセスできるか確認。
+
+### 環境変数の一覧
+
+| 変数名                 | 役割                                      | デフォルト値                       |
+| ---------------------- | ----------------------------------------- | ---------------------------------- |
+| MAIL_HOST              | mailpit のホスト名（Docker で使用）        | localhost                           |
+| MAIL_PORT              | mailpit のポート番号（Docker で使用）      | 1025                                |
+| DB_USER                | PostgreSQL のユーザ名                     | postgres                            |
+| DB_PASS                | PostgreSQL のパスワード                   | postgres                            |
+| DB_HOST                | PostgreSQL のホスト名                     | localhost                           |
+| DB_PORT                | PostgreSQL のポート番号                   | 5432                                |
+| DB＿NAME               | PostgreSQL のデータベース名                | scraping                            |
+
+## 機能一覧
 
 ## トラブルシューティング
 
 ### （例）.env: no such file or directory
-
-.env ファイルがないので環境変数の一覧を参考に作成しましょう
 
 
 <p align="right">(<a href="#top">トップへ</a>)</p>
