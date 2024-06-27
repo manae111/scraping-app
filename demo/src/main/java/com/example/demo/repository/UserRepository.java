@@ -3,6 +3,7 @@ package com.example.demo.repository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -53,8 +54,12 @@ public class UserRepository {
                 WHERE username = :username;
                 """;
         SqlParameterSource param = new MapSqlParameterSource().addValue("username", username);
-        User user = template.queryForObject(sql, param, USER_ROW_MAPPER);
-        return user;
+        try {
+            User user = template.queryForObject(sql, param, USER_ROW_MAPPER);
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     /**

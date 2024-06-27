@@ -18,6 +18,7 @@ app.post('/scrape', (req, res) => {
       const $ = cheerio.load(html);
       const name = $('#productTitle').text(); // htmlからidがproductTitleのテキストを取得
       const price = $('#corePriceDisplay_desktop_feature_div .a-price-whole:first').text();
+      console.log('取得した価格:', price);
       res.send({name: name, price: price, url: url});
     })
     .catch(error => {

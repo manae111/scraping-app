@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService{
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         com.example.demo.domain.User user = userRepository.findUserByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found for name: " + username);
+            throw new UsernameNotFoundException("ユーザーが見つかりません: " + username);
         }
         // カスタムのUserDetailsオブジェクトを作成して返す
         return new CustomUserDetails(

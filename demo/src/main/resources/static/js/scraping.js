@@ -20,7 +20,11 @@ document.getElementById('scrapeForm').addEventListener('submit', function(event)
       .then(response => response.json())
       .then(data => {
         document.getElementById('scrapedItemName').value = data.name;
-        document.getElementById('scrapedItemPrice').value = data.price;
+        if (data.price === "0") {
+          document.getElementById('scrapedItemPrice').value = "";
+        } else {
+          document.getElementById('scrapedItemPrice').value = data.price;
+        }
         document.getElementById('scrapedUrl').value = data.url;
         document.getElementById('submitForm').submit();
       })

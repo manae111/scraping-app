@@ -50,8 +50,4 @@ public class CustomUserDetails implements UserDetails {
     public void setAuthorities(Collection<GrantedAuthority> authorities) {
         this.authorities = authorities;
     }
-
-    
-
-
 }

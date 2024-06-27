@@ -105,7 +105,8 @@ public class ItemRepository {
     public List<Item> findItemByUserId(Integer userId) {
         String sql = """
                     SELECT * FROM items
-                    WHERE user_id = :userId;
+                    WHERE user_id = :userId
+                    ORDER BY id DESC;
                     """;
         SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
         List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER);

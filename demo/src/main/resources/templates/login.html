@@ -10,6 +10,7 @@
     <div>
         <h3>Webスクレイパー&nbsp;ログイン</h3>
         <form th:action="@{/login}" method="post">
+            <div class="error" th:if="${session.loginError}" th:text="${session.loginError}"></div>
             メールアドレス:<input type="email" name="username"><br>
             パスワード：<input type="password" name="password"><br>
             <input type="submit" value="ログイン">

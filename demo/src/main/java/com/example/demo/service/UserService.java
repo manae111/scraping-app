@@ -20,4 +20,8 @@ public class UserService {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userRepository.insertUser(user);
 	}
+
+    public User findUserByUsername(String username) {
+        return userRepository.findUserByUsername(username);
+    }
 }

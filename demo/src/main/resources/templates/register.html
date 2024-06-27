@@ -10,8 +10,11 @@
     <div>
         <h3>新規登録</h3>
         <form th:action="@{/register}" method="post" th:object="${userForm}">
-            メールアドレス:<input type="text" name="username"><br>
-            パスワード：<input type="password" name="password"><br>
+            <div class="error" th:errors="*{username}"></div>
+            <div class="error" th:if="${message}" th:text="${message}"></div>
+            メールアドレス:<input type="text" name="username" th:field="*{username}"><br>
+            <div class="error" th:errors="*{password}"></div>
+            パスワード：<input type="password" name="password" th:field="*{password}"><br>
             <input type="submit" value="登録">
         </form>
         または<a th:href="@{/toLogin}">ログイン</a>
