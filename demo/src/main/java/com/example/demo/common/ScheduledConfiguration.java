@@ -38,7 +38,7 @@ public class ScheduledConfiguration {
     private ItemService itemService;
 
     //cron = "秒 分 時間 日 月 曜日"
-    @Scheduled(cron = "0 40 10 * * ?")
+    @Scheduled(cron = "0 0 11 * * ?")
     public void scheduledSendmail() {
         JobParameters jobParameters = new JobParametersBuilder()
             .addLong("time",System.currentTimeMillis())//実行時間を記録
