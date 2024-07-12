@@ -141,16 +141,28 @@ sequenceDiagram
     participant Application
     participant Database
     participant Application(batch)
-
+    
     User ->> Application: ログイン
+    activate Application
     Application -->> User: ログイン認証
+    deactivate Application
 
     User ->> Application: URL入力
+    activate Application
     Application ->> Database: 商品登録
+    deactivate Application
+    activate Database
     Database ->> Application(batch): 商品情報
+    deactivate Database
+    activate Application(batch)
     Application(batch) -->> Database: バッチ処理
+    deactivate Application(batch)
+    activate Database
     Database -->> Application: 比較結果返却
-  　Application -->> User: メール送信
+    activate Application
+    deactivate Database
+    Application -->> User: メール送信
+    deactivate Application
 
 ```
 
