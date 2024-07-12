@@ -140,13 +140,15 @@ sequenceDiagram
     participant User
     participant Application
     participant Database
+    participant Application(batch)
 
     User ->> Application: ログイン
     Application -->> User: ログイン認証
 
     User ->> Application: URL入力
     Application ->> Database: 商品登録
-    Application ->> Database: バッチ処理
+    Database ->> Application(batch): 商品情報
+    Application(batch) -->> Database: バッチ処理
     Database -->> Application: 比較結果返却
   　Application -->> User: メール送信
 
