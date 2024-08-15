@@ -43,7 +43,8 @@ Webスクレイピングアプリケーション
 Amazonの商品ページのURLを入力すると値段等がスクレイピングされDBに登録されます。  
 毎日11:00のバッチ処理時に登録してある商品の最新の値段をDBに保存、登録時の値段と比較し、  
 登録時よりも安くなっていた場合、メールピットにその商品の情報を送信します。  
-ユーザーはサービス利用時にメールアドレスとパスワードを登録する必要があり、登録商品はユーザーごとに管理されます。
+ユーザーはサービス利用時にメールアドレスとパスワードを登録する必要があり、登録商品はユーザーごとに管理されます。  
+Dockerを使用し、サーバー、DB初期テーブルを自動作成します。
 
 <p align="right">(<a href="#top">トップへ</a>)</p>
 
@@ -53,12 +54,13 @@ Amazonの商品ページのURLを入力すると値段等がスクレイピン�
 
 | 言語・フレームワーク  | バージョン |
 | --------------------- | ---------- |
-| Node.js               | 20.14.0    |
+| Node.js               | 20.16.0    |
 | SpringBoot            | 3.3.0      |
 | SpringSecurity        | 6.3.0      |
-| java                  | 17.0.10    |
-| PostgreSQL            | 11.22      |
+| java                  | 17.0.2    |
+| PostgreSQL            | 16.4      |
 | Docker                | 25.0.3     |
+| Apache Tomcat         | 9.0.62     |
 
 その他のパッケージのバージョンは package.json を参照してください
 
@@ -76,29 +78,52 @@ Amazonの商品ページのURLを入力すると値段等がスクレイピン�
 ├── .vscode
 │   ├── launch.json
 │   └── settings.json
+├── README.md
 ├── demo
 │   ├── .gitignore
 │   ├── .gradle
 │   │   ├── 8.7
 │   │   ├── buildOutputCleanup
+│   │   ├── file-system.probe
 │   │   └── vcs-1
-│   ├── .vscode
-│   │   └── NEWLY_CREATED_BY_SPRING_INITIALIZR
-│   ├── HELP.md
+│   ├── .settings
+│   │   ├── org.eclipse.buildship.core.prefs
+│   │   ├── org.eclipse.wst.common.component
+│   │   └── org.eclipse.wst.common.project.facet.core.xml
 │   ├── bin
 │   │   ├── main
 │   │   └── test
+│   ├── build
+│   │   ├── classes
+│   │   ├── generated
+│   │   ├── libs
+│   │   ├── reports
+│   │   ├── resolvedMainClassName
+│   │   ├── resources
+│   │   ├── test-results
+│   │   └── tmp
 │   ├── build.gradle
+│   ├── docker-compose.yml
 │   ├── gradle
 │   │   └── wrapper
 │   ├── gradlew
 │   ├── gradlew.bat
+│   ├── init.sql
+│   ├── server
+│   │   └── Dockerfile
 │   ├── settings.gradle
 │   ├── sql
 │   │   └── ddl_scraping.txt
-│   └── src
-│       ├── main
-│       └── test
+│   ├── src
+│   │   ├── main
+│   │   └── test
+│   └── web
+│       └── Dockerfile
+├── img
+│   ├── login.png
+│   ├── register.png
+│   ├── scrape.png
+│   └── screen-transition.png
 ├── package-lock.json
 └── package.json
 </pre>
@@ -174,10 +199,10 @@ sequenceDiagram
 
 ### 作成と起動
 
-DBとテーブルを作成する  
-node server.jsでサーバーを起動する  
-DemoApplicationを起動する  
-dockerでmailpitを起動する
+Ubuntuで以下のコマンドを入力する
+```
+docker compose -f "docker-compose.ymlの絶対パス" up -d
+```
 
 ### 動作確認
 
@@ -189,11 +214,11 @@ http://localhost:8080/toLogin にアクセスできるか確認。
 
 | 変数名                 | 役割                                      | デフォルト値                       |
 | ---------------------- | ----------------------------------------- | ---------------------------------- |
-| MAIL_HOST              | mailpit のホスト名（Docker で使用）        | localhost                           |
-| MAIL_PORT              | mailpit のポート番号（Docker で使用）      | 1025                                |
+| MAIL_HOST              | mailpit のホスト名                        | mail                                |
+| MAIL_PORT              | mailpit のポート番号                      | 1025                                |
 | DB_USER                | PostgreSQL のユーザ名                     | postgres                            |
 | DB_PASS                | PostgreSQL のパスワード                   | postgres                            |
-| DB_HOST                | PostgreSQL のホスト名                     | localhost                           |
+| DB_HOST                | PostgreSQL のホスト名                     | db                                  |
 | DB_PORT                | PostgreSQL のポート番号                   | 5432                                |
 | DB＿NAME               | PostgreSQL のデータベース名                | scraping                            |
 
@@ -223,9 +248,6 @@ Scrapeボタンを押すとボタンの表記が解析中に変わり、解析�
 <p align="right">(<a href="#top">トップへ</a>)</p>
 
 ## トラブルシューティング
-
-### ・サーバーの作成ができない
-jsフォルダまで移動してからコマンドを入力してください。
 
 ### ・URL入力後、「解析が失敗しました」と表示される
 取得元のデータの構造により、解析ができない商品があります。他の商品を登録してください。
