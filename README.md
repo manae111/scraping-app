@@ -57,7 +57,7 @@ Dockerを使用し、サーバー、DB初期テーブルを自動作成します
 | Node.js               | 20.16.0    |
 | SpringBoot            | 3.3.0      |
 | SpringSecurity        | 6.3.0      |
-| java                  | 17.0.2     |
+| Java                  | 17.0.2     |
 | PostgreSQL            | 16.4       |
 | Docker                | 25.0.3     |
 | Apache Tomcat         | 9.0.62     |
