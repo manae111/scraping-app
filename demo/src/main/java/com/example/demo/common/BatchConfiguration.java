@@ -36,7 +36,7 @@ public class BatchConfiguration {
     private final ItemService itemService;
 
     public BatchConfiguration(WebClient.Builder webClientBuilder, ItemService itemService) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:3000").build();
+        this.webClient = webClientBuilder.baseUrl("http://server:3000").build();
         this.itemService = itemService;
     }
 

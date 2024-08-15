@@ -22,6 +22,7 @@ services:
       DB_NAME: scraping
       DB_USER: postgres
       DB_PASS: postgres
+      TZ: Asia/Tokyo
     ports:
       - "8080:8080"
     depends_on:
@@ -34,6 +35,9 @@ services:
       dockerfile: server/Dockerfile
     ports:
       - "3000:3000"
+    depends_on:
+      - web
+      - db
   
   mail:
     container_name: scraping-mailpit
