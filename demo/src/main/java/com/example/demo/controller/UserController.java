@@ -13,6 +13,8 @@ import com.example.demo.domain.User;
 import com.example.demo.form.UserForm;
 import com.example.demo.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("")
 public class UserController {
@@ -20,9 +22,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private HttpSession session;
+
     // 新規登録 user
     @GetMapping("/toRegister")
     public String toRegister(UserForm userForm) {
+        session.invalidate();
         return "register";
     }
 
